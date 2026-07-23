@@ -1,4 +1,3 @@
-"use client";
 
 import Link from "next/link";
 import { User, Wrench } from "lucide-react";

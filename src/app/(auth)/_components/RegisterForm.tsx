@@ -14,6 +14,7 @@ import {
   registerSchema,
 } from "@/schemas/register.schema";
 import { CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { registerUser } from "../_actions/registerUser";
 
 type Role = "CUSTOMER" | "TECHNICIAN";
 
@@ -44,11 +45,20 @@ export default function RegisterForm({
     },
   });
 
-  const onSubmit = async (data: RegisterFormData) => {
-    console.log(data);
 
-    // await registerMutation.mutateAsync(data)
-  };
+  const onSubmit = async (data: RegisterFormData) => {
+  try {
+    const result = await registerUser(data);
+
+    console.log(result);
+
+    // Show success toast
+
+    // router.push("/login");
+  } catch (error) {
+    console.error(error);
+  }
+};
 
   return (
     <>
