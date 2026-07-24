@@ -1,6 +1,7 @@
 "use server";
 
 import { LoginFormData } from "@/schemas/login.schema";
+import { cookies } from "next/headers";
 
 
 export async function loginUser(data: LoginFormData) {
@@ -22,7 +23,21 @@ export async function loginUser(data: LoginFormData) {
     throw new Error(result.message || "Login failed");
   }
 
+  if(result.success){
+    const cookieStore = await cookies();
+
+    cookieStore.set("accessToken", result.data.accessToken, {
+      httpOnly: true,
+      maxAge: 60 * 60 * 24,
+      sameSite: "lax",
+    });
+
+    cookieStore.set("refreshToken", result.data.refreshToken, {
+      httpOnly: true,
+      maxAge: 60 * 60 * 24 * 7,
+      sameSite: "lax",
+    });
+  }
+
   return result;
-
-
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useActionState, useState } from "react";
 import Link from "next/link";
 import { Eye, EyeOff } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -25,6 +25,8 @@ import { loginUser } from "../_actions/loginUser";
 import { loginSchema, LoginFormData } from "@/schemas/login.schema";
 
 export default function Login() {
+  const [state, action, pending]= useActionState(loginUser, false);
+  
   const [showPassword, setShowPassword] = useState(false);
 
   const router = useRouter();
