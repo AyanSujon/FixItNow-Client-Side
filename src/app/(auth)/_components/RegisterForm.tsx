@@ -8,6 +8,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 import {
   RegisterFormData,
@@ -29,6 +31,7 @@ export default function RegisterForm({
 }: RegisterFormProps) {
   const [showPassword, setShowPassword] = useState(false);
 
+const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -46,17 +49,28 @@ export default function RegisterForm({
   });
 
 
-  const onSubmit = async (data: RegisterFormData) => {
+const onSubmit = async (data: RegisterFormData) => {
   try {
     const result = await registerUser(data);
 
     console.log(result);
 
-    // Show success toast
+    toast.success("Registration successful!", {
+      description: "Redirecting to the login page...",
+    });
 
-    // router.push("/login");
+    setTimeout(() => {
+      router.push("/login");
+    }, 1200);
   } catch (error) {
     console.error(error);
+
+    toast.error("Registration failed", {
+      description:
+        error instanceof Error
+          ? error.message
+          : "Something went wrong. Please try again.",
+    });
   }
 };
 

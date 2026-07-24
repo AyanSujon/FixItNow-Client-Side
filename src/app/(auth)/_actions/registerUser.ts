@@ -1,22 +1,39 @@
 import { RegisterFormData } from "@/schemas/register.schema";
 
-export async function registerUser(data: RegisterFormData) {
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/auth/register`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
+type RegisterResponse = {
+  success: boolean;
+  message: string;
+  data?: unknown;
+};
+
+export async function registerUser(
+  data: RegisterFormData
+): Promise<RegisterResponse> {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/auth/register`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+        cache: "no-store",
+      }
+    );
+
+    const result: RegisterResponse = await response.json();
+
+    if (!response.ok) {
+      throw new Error(result.message || "Registration failed.");
     }
-  );
 
-  const result = await response.json();
+    return result;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw error;
+    }
 
-  if (!response.ok) {
-    throw new Error(result.message || "Registration failed");
+    throw new Error("Something went wrong. Please try again.");
   }
-
-  return result;
 }
