@@ -1,11 +1,15 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import Link from "next/link"
-import { Eye, EyeOff } from "lucide-react"
+import { useState } from "react";
+import Link from "next/link";
+import { Eye, EyeOff } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "sonner";
 
-import Container from "@/components/common/Layout"
-import { Button } from "@/components/ui/button"
+import Container from "@/components/common/Layout";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -13,18 +17,63 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+
+import { loginUser } from "../_actions/loginUser";
+import { loginSchema, LoginFormData } from "@/schemas/login.schema";
 
 export default function Login() {
-  const [showPassword, setShowPassword] = useState(false)
+  const [showPassword, setShowPassword] = useState(false);
+
+  const router = useRouter();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<LoginFormData>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+
+
+  const onSubmit = async (data: LoginFormData) => {
+    try {
+      const result = await loginUser(data);
+
+      toast.success("Login successful", {
+        description: result.message || "Welcome back!",
+      });
+
+      router.replace("/dashboard");
+
+    } catch (error) {
+
+      const message =
+        error instanceof Error
+          ? error.message
+          : "Invalid email or password";
+
+      toast.error("Login failed", {
+        description: message,
+      });
+    }
+  };
+
 
   return (
     <Container>
       <div className="flex min-h-screen items-center justify-center">
+
         <Card className="w-full max-w-sm shadow-lg">
+
           <CardHeader className="space-y-2 text-center">
+
             <CardTitle className="text-primary text-2xl font-bold">
               Welcome Back
             </CardTitle>
@@ -32,66 +81,131 @@ export default function Login() {
             <CardDescription>
               Login to your account to continue.
             </CardDescription>
+
           </CardHeader>
 
+
           <CardContent>
-            <form className="space-y-5">
+
+            <form
+              onSubmit={handleSubmit(onSubmit)}
+              className="space-y-5"
+            >
+
               {/* Email */}
+
               <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
+
+                <Label htmlFor="email">
+                  Email
+                </Label>
 
                 <Input
                   id="email"
                   type="email"
                   placeholder="john@example.com"
-                  required
-                  className="focus-visible:ring-ring"
+                  autoComplete="email"
+                  {...register("email")}
                 />
+
+                {errors.email && (
+                  <p className="text-sm text-red-500">
+                    {errors.email.message}
+                  </p>
+                )}
+
               </div>
 
+
+
               {/* Password */}
+
               <div className="space-y-2">
+
                 <div className="flex items-center justify-between">
-                  <Label htmlFor="password">Password</Label>
+
+                  <Label htmlFor="password">
+                    Password
+                  </Label>
+
 
                   <Link
-                    href="/forgot-password"
-                    className="text-primary text-sm transition-colors hover:underline"
+                    href="/reset-password"
+                    className="text-primary text-sm hover:underline"
                   >
                     Forgot password?
                   </Link>
+
                 </div>
 
+
                 <div className="relative">
+
                   <Input
                     id="password"
-                    type={showPassword ? "text" : "password"}
+                    type={
+                      showPassword
+                        ? "text"
+                        : "password"
+                    }
                     placeholder="••••••••"
-                    required
-                    className="pr-11 focus-visible:ring-ring"
+                    autoComplete="current-password"
+                    {...register("password")}
+                    className="pr-11"
                   />
+
 
                   <Button
                     type="button"
                     variant="ghost"
                     size="icon"
-                    onClick={() => setShowPassword((prev) => !prev)}
+                    aria-label="Toggle password visibility"
+                    onClick={() =>
+                      setShowPassword(
+                        (prev) => !prev
+                      )
+                    }
                     className="absolute top-1/2 right-1 h-8 w-8 -translate-y-1/2 hover:bg-transparent"
                   >
+
                     {showPassword ? (
                       <EyeOff className="text-muted-foreground h-4 w-4" />
                     ) : (
                       <Eye className="text-muted-foreground h-4 w-4" />
                     )}
+
                   </Button>
+
                 </div>
+
+
+                {errors.password && (
+                  <p className="text-sm text-red-500">
+                    {errors.password.message}
+                  </p>
+                )}
+
               </div>
 
-              {/* Submit */}
-              <Button type="submit" className="w-full">
-                Login
+
+
+              {/* Submit Button */}
+
+              <Button
+                type="submit"
+                className="w-full"
+                disabled={isSubmitting}
+              >
+
+                {isSubmitting
+                  ? "Logging in..."
+                  : "Login"}
+
               </Button>
+
+
             </form>
+
           </CardContent>
 
           <CardFooter className="justify-center">
@@ -99,14 +213,15 @@ export default function Login() {
               Don't have an account?{" "}
               <Link
                 href="/register"
-                className="text-primary font-medium transition-colors hover:underline"
+                className="text-primary font-medium hover:underline"
               >
                 Sign Up
               </Link>
             </p>
           </CardFooter>
         </Card>
+
       </div>
     </Container>
-  )
+  );
 }
