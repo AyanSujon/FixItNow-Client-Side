@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { ArrowLeft, Mail } from "lucide-react"
 
-import Container from "@/components/common/Layout"
+import Container from "@/components/common/Container"
 import { Button } from "@/components/ui/button"
 import {
   Card,

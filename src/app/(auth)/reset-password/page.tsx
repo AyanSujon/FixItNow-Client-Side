@@ -4,7 +4,7 @@ import { useState } from "react"
 import Link from "next/link"
 import { Eye, EyeOff, LockKeyhole } from "lucide-react"
 
-import Container from "@/components/common/Layout"
+import Container from "@/components/common/Container"
 import { Button } from "@/components/ui/button"
 import {
   Card,

@@ -216,7 +216,7 @@ import { useState } from "react";
 
 import RegisterForm from "../_components/RegisterForm";
 import RoleSelector from "../_components/RoleSelector";
-import Container from "@/components/common/Layout";
+import Container from "@/components/common/Container";
 import { Card } from "@/components/ui/card";
 
 export type Role = "CUSTOMER" | "TECHNICIAN";
