@@ -4,7 +4,7 @@
 
 import * as React from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { Menu, User, Settings, LogOut, Home, Search, Users, PlayCircle } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
@@ -24,6 +24,9 @@ import {
 } from '@/components/ui/sheet';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import ThemeSwitcher from './ThemeSwitcher';
+import { logout } from '@/services/logout';
+import { toast } from 'sonner';
+
 
 // Navigation items
 const navItems = [
@@ -63,11 +66,38 @@ type NavbarProps = {
 }
 
 export default function Navbar({ user }: NavbarProps) {
-
   const pathname = usePathname();
+    const router = useRouter();
 
-  // Replace this with your real auth logic (e.g. useAuthContext, next-auth, etc.)
-  const [isLoggedIn, setIsLoggedIn] = React.useState(true);
+  // login state from props
+  const isLoggedIn = !!user?.success && !!user?.data?.profile;
+
+  const profile = user?.data?.profile;
+
+
+
+  const handleLogout = async () => {
+  try {
+    toast.loading("Logging out...", { id: "logout" });
+
+    await logout(); // logout function
+
+    toast.success("Logged out successfully!", { 
+      id: "logout",
+      description: "See you soon 👋"
+    });
+
+    router.replace("/login");   
+
+  } catch (error) {
+    console.error("Logout error:", error);
+    
+    toast.error("Failed to logout", {
+      id: "logout",
+      description: "Please try again",
+    });
+  }
+};
 
   return (
     <nav className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -101,49 +131,44 @@ export default function Navbar({ user }: NavbarProps) {
             })}
           </div>
 
-          {/* Right Side - Auth Section */}
+          {/* Right Side */}
           <div className="flex items-center gap-3">
-
-            {/* === Theme Switcher (Dropdown) === */}
             <ThemeSwitcher />
 
-            {isLoggedIn ? (
+            {isLoggedIn && profile ? (
               /* === Logged In: User Dropdown === */
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" className="relative h-9 w-9 rounded-full">
                     <Avatar className="h-9 w-9">
-                      <AvatarImage src="https://github.com/shadcn.png" alt="User" />
-                      <AvatarFallback>User</AvatarFallback>
+                      <AvatarImage 
+                        src={"https://github.com/shadcn.png"} 
+                        alt={profile.name} 
+                      />
+                      <AvatarFallback>{profile.name?.slice(0, 2).toUpperCase()}</AvatarFallback>
                     </Avatar>
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-56" align="end" forceMount>
                   <DropdownMenuLabel className="font-normal">
                     <div className="flex flex-col space-y-1">
-                      <p className="text-sm font-medium leading-none">{user.data?.profile?.name || "Name"}</p>
+                      <p className="text-sm font-medium leading-none">{profile.name}</p>
                       <p className="text-xs leading-none text-muted-foreground">
-                       {user.data?.profile?.email || "Email"}
+                        {profile.email}
                       </p>
                     </div>
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem asChild>
-                    <Link href="/profile" className="cursor-pointer">
-                      <User className="mr-2 h-4 w-4" />
-                      Profile
-                    </Link>
+                    <Link href="/profile">Profile</Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link href="/settings" className="cursor-pointer">
-                      <Settings className="mr-2 h-4 w-4" />
-                      Settings
-                    </Link>
+                    <Link href="/settings">Settings</Link>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
-                    className="text-destructive focus:text-destructive"
-                    onClick={() => setIsLoggedIn(false)}
+                    className="text-destructive focus:text-destructive cursor-pointer"
+                    onClick={handleLogout}
                   >
                     <LogOut className="mr-2 h-4 w-4" />
                     Log out
@@ -151,7 +176,7 @@ export default function Navbar({ user }: NavbarProps) {
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
-              /* === Not Logged In: Login + Sign Up === */
+              /* === Not Logged In === */
               <div className="hidden md:flex items-center gap-3">
                 <Button variant="ghost" asChild>
                   <Link href="/login">Login</Link>
@@ -162,7 +187,7 @@ export default function Navbar({ user }: NavbarProps) {
               </div>
             )}
 
-            {/* Mobile Menu */}
+            {/* Mobile Menu - Same logic */}
             <Sheet>
               <SheetTrigger asChild className="md:hidden">
                 <Button variant="ghost" size="icon">
@@ -170,64 +195,37 @@ export default function Navbar({ user }: NavbarProps) {
                 </Button>
               </SheetTrigger>
               <SheetContent side="right" className="w-80">
-                <div className="flex flex-col gap-6 pt-8">
-                  <div className="flex items-center gap-3 px-2">
-                    <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary">
-                      <span className="text-lg font-bold text-primary-foreground">F</span>
-                    </div>
-                    <span className="font-semibold text-2xl">FixItNow</span>
-                  </div>
+                {/* ... existing mobile nav ... */}
 
-                  {/* Nav Links */}
-                  <div className="flex flex-col gap-2">
-                    {navItems.map((item) => (
-                      <Link
-                        key={item.href}
-                        href={item.href}
-                        className={cn(
-                          "flex items-center gap-3 rounded-lg px-4 py-3 text-base font-medium transition-colors",
-                          pathname === item.href
-                            ? "bg-primary text-primary-foreground"
-                            : "hover:bg-muted"
-                        )}
-                      >
-                        <item.icon className="h-5 w-5" />
-                        {item.label}
-                      </Link>
-                    ))}
-                  </div>
-
-                  {/* Auth Section in Mobile */}
-                  <div className="border-t pt-6 mt-auto">
-                    {isLoggedIn ? (
-                      <>
-                        <div className="px-4 text-sm text-muted-foreground mb-4">Account</div>
-                        <div className="space-y-1">
-                          <Link href="/profile" className="flex items-center gap-3 rounded-lg px-4 py-3 hover:bg-muted">
-                            <User className="h-5 w-5" /> Profile
-                          </Link>
-                          <Link href="/settings" className="flex items-center gap-3 rounded-lg px-4 py-3 hover:bg-muted">
-                            <Settings className="h-5 w-5" /> Settings
-                          </Link>
-                          <button
-                            onClick={() => setIsLoggedIn(false)}
-                            className="w-full flex items-center gap-3 rounded-lg px-4 py-3 text-destructive hover:bg-destructive/10"
-                          >
-                            <LogOut className="h-5 w-5" /> Log out
-                          </button>
-                        </div>
-                      </>
-                    ) : (
-                      <div className="flex flex-col gap-3 px-2">
-                        <Button variant="outline" asChild className="w-full">
-                          <Link href="/login">Login</Link>
-                        </Button>
-                        <Button asChild className="w-full">
-                          <Link href="/register">Sign Up</Link>
-                        </Button>
+                <div className="border-t pt-6 mt-auto">
+                  {isLoggedIn && profile ? (
+                    <>
+                      <div className="px-4 text-sm text-muted-foreground mb-4">Account</div>
+                      <div className="space-y-1">
+                        <Link href="/profile" className="flex items-center gap-3 rounded-lg px-4 py-3 hover:bg-muted">
+                          <User className="h-5 w-5" /> Profile
+                        </Link>
+                        <Link href="/settings" className="flex items-center gap-3 rounded-lg px-4 py-3 hover:bg-muted">
+                          <Settings className="h-5 w-5" /> Settings
+                        </Link>
+                        <button
+                          onClick={handleLogout}
+                          className="w-full flex items-center gap-3 rounded-lg px-4 py-3 text-destructive hover:bg-destructive/10"
+                        >
+                          <LogOut className="h-5 w-5" /> Log out
+                        </button>
                       </div>
-                    )}
-                  </div>
+                    </>
+                  ) : (
+                    <div className="flex flex-col gap-3 px-2">
+                      <Button variant="outline" asChild className="w-full">
+                        <Link href="/login">Login</Link>
+                      </Button>
+                      <Button asChild className="w-full">
+                        <Link href="/register">Sign Up</Link>
+                      </Button>
+                    </div>
+                  )}
                 </div>
               </SheetContent>
             </Sheet>
@@ -237,5 +235,4 @@ export default function Navbar({ user }: NavbarProps) {
     </nav>
   );
 }
-
 
