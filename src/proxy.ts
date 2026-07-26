@@ -47,6 +47,22 @@ if(!accessToken && !isPublicRoutes && !isAuthRoutes){
   return NextResponse.redirect(new URL("/login", request.url));
 }
 
+// Authorization: Role based access control 
+if(pathname.startsWith("/dashboard/customer") && userRole !== "CUSTOMER"){
+  return NextResponse.redirect(new URL("/", request.url));
+}else if(pathname.startsWith("/dashboard/admin") && userRole !== "ADMIN"){
+  return NextResponse.redirect(new URL("/", request.url));
+}else if(pathname.startsWith("/dashboard/technician") && userRole !== "TECHNICIAN"){
+  return NextResponse.redirect(new URL("/", request.url));
+}
+
+
+
+
+
+
+
+
 
   // return NextResponse.redirect(new URL('/', request.url))
 return NextResponse.next();
