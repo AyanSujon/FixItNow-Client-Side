@@ -49,11 +49,11 @@ if(!accessToken && !isPublicRoutes && !isAuthRoutes){
 
 // Authorization: Role based access control 
 if(pathname.startsWith("/dashboard/customer") && userRole !== "CUSTOMER"){
-  return NextResponse.redirect(new URL("/", request.url));
+  return NextResponse.redirect(new URL("/not-found", request.url));
 }else if(pathname.startsWith("/dashboard/admin") && userRole !== "ADMIN"){
-  return NextResponse.redirect(new URL("/", request.url));
+  return NextResponse.redirect(new URL("/not-found", request.url));
 }else if(pathname.startsWith("/dashboard/technician") && userRole !== "TECHNICIAN"){
-  return NextResponse.redirect(new URL("/", request.url));
+  return NextResponse.redirect(new URL("/not-found", request.url));
 }
 
 
