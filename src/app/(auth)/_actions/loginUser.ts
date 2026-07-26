@@ -2,6 +2,8 @@
 
 import { LoginFormData } from "@/schemas/login.schema";
 import { cookies } from "next/headers";
+import jwt, { JwtPayload } from "jsonwebtoken";
+import { redirect } from "next/navigation";
 
 
 export async function loginUser(data: LoginFormData) {
@@ -37,6 +39,12 @@ export async function loginUser(data: LoginFormData) {
       maxAge: 60 * 60 * 24 * 7,
       sameSite: "lax",
     });
+    
+    const decodedToken = jwt.decode(result.data.accessToken) as JwtPayload;
+      console.log(decodedToken, "decoded token")
+    if(decodedToken.role === "CUSTOMER"){
+      redirect("/dashboard");
+    }
   }
 
   return result;
