@@ -27,11 +27,11 @@ if(decodedToken){
 // user in logged in and trying to access login or register page, redirect to dashboard or root home page
 if(accessToken && AUTH_ROUTES.includes(pathname)){
   if(userRole === "CUSTOMER"){
-    return NextResponse.redirect(new URL("/dashboard/customer", request.url));
+    return NextResponse.redirect(new URL("/dashboard", request.url));
   }else if(userRole === "ADMIN"){
-    return NextResponse.redirect(new URL("/dashboard/admin", request.url));
+    return NextResponse.redirect(new URL("/admin-dashboard", request.url));
   }else if(userRole === "TECHNICIAN"){
-    return NextResponse.redirect(new URL("/dashboard/technician", request.url));
+    return NextResponse.redirect(new URL("/technician-dashboard", request.url));
   }else{
     return NextResponse.redirect(new URL("/", request.url));
   }
@@ -47,16 +47,14 @@ if(!accessToken && !isPublicRoutes && !isAuthRoutes){
   return NextResponse.redirect(new URL("/login", request.url));
 }
 
-// Authorization: Role based access control 
-if(pathname.startsWith("/dashboard/customer") && userRole !== "CUSTOMER"){
+// Authorization: Role based access control
+if(pathname.startsWith("/customer-dashboard") && userRole !== "CUSTOMER"){
   return NextResponse.redirect(new URL("/not-found", request.url));
-}else if(pathname.startsWith("/dashboard/admin") && userRole !== "ADMIN"){
+}else if(pathname.startsWith("/admin-dashboard") && userRole !== "ADMIN"){
   return NextResponse.redirect(new URL("/not-found", request.url));
-}else if(pathname.startsWith("/dashboard/technician") && userRole !== "TECHNICIAN"){
+}else if(pathname.startsWith("/technician-dashboard") && userRole !== "TECHNICIAN"){
   return NextResponse.redirect(new URL("/not-found", request.url));
-}
-
-
+} 
 return NextResponse.next();
 
 }
