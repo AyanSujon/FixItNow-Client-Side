@@ -57,14 +57,6 @@ if(pathname.startsWith("/dashboard/customer") && userRole !== "CUSTOMER"){
 }
 
 
-
-
-
-
-
-
-
-  // return NextResponse.redirect(new URL('/', request.url))
 return NextResponse.next();
 
 }

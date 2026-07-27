@@ -1,13 +1,11 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import {  useState } from "react";
 import Link from "next/link";
 import { Eye, EyeOff } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-
 import Container from "@/components/common/Container";
 import { Button } from "@/components/ui/button";
 import {
@@ -20,17 +18,11 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-
 import { loginUser } from "../_actions/loginUser";
 import { loginSchema, LoginFormData } from "@/schemas/login.schema";
 
 export default function Login() {
-  // const [state, action, pending]= useActionState(loginUser, false);
-  
   const [showPassword, setShowPassword] = useState(false);
-
-  const router = useRouter();
-
   const {
     register,
     handleSubmit,
@@ -42,20 +34,13 @@ export default function Login() {
       password: "",
     },
   });
-
-
   const onSubmit = async (data: LoginFormData) => {
     try {
       const result = await loginUser(data);
-
       toast.success("Login successful", {
         description: result.message || "Welcome back!",
       });
-
-      router.replace("/dashboard");
-
     } catch (error) {
-
       const message =
         error instanceof Error
           ? error.message
@@ -67,41 +52,28 @@ export default function Login() {
     }
   };
 
-
   return (
     <Container>
       <div className="flex min-h-screen items-center justify-center">
-
         <Card className="w-full max-w-sm shadow-lg">
-
           <CardHeader className="space-y-2 text-center">
-
             <CardTitle className="text-primary text-2xl font-bold">
               Welcome Back
             </CardTitle>
-
             <CardDescription>
               Login to your account to continue.
             </CardDescription>
-
           </CardHeader>
-
-
           <CardContent>
-
             <form
               onSubmit={handleSubmit(onSubmit)}
               className="space-y-5"
             >
-
               {/* Email */}
-
               <div className="space-y-2">
-
                 <Label htmlFor="email">
                   Email
                 </Label>
-
                 <Input
                   id="email"
                   type="email"
@@ -109,40 +81,26 @@ export default function Login() {
                   autoComplete="email"
                   {...register("email")}
                 />
-
                 {errors.email && (
                   <p className="text-sm text-red-500">
                     {errors.email.message}
                   </p>
                 )}
-
               </div>
-
-
-
               {/* Password */}
-
               <div className="space-y-2">
-
                 <div className="flex items-center justify-between">
-
                   <Label htmlFor="password">
                     Password
                   </Label>
-
-
                   <Link
                     href="/reset-password"
                     className="text-primary text-sm hover:underline"
                   >
                     Forgot password?
                   </Link>
-
                 </div>
-
-
                 <div className="relative">
-
                   <Input
                     id="password"
                     type={
@@ -155,8 +113,6 @@ export default function Login() {
                     {...register("password")}
                     className="pr-11"
                   />
-
-
                   <Button
                     type="button"
                     variant="ghost"
@@ -169,30 +125,20 @@ export default function Login() {
                     }
                     className="absolute top-1/2 right-1 h-8 w-8 -translate-y-1/2 hover:bg-transparent"
                   >
-
                     {showPassword ? (
                       <EyeOff className="text-muted-foreground h-4 w-4" />
                     ) : (
                       <Eye className="text-muted-foreground h-4 w-4" />
                     )}
-
                   </Button>
-
                 </div>
-
-
                 {errors.password && (
                   <p className="text-sm text-red-500">
                     {errors.password.message}
                   </p>
                 )}
-
               </div>
-
-
-
               {/* Submit Button */}
-
               <Button
                 type="submit"
                 className="w-full"
@@ -202,17 +148,12 @@ export default function Login() {
                 {isSubmitting
                   ? "Logging in..."
                   : "Login"}
-
               </Button>
-
-
             </form>
-
           </CardContent>
-
           <CardFooter className="justify-center">
             <p className="text-muted-foreground text-sm">
-              Don't have an account?{" "}
+              Don&apos;t have an account?{" "}
               <Link
                 href="/register"
                 className="text-primary font-medium hover:underline"
@@ -222,7 +163,6 @@ export default function Login() {
             </p>
           </CardFooter>
         </Card>
-
       </div>
     </Container>
   );
