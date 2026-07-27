@@ -53,7 +53,7 @@ const onSubmit = async (data: RegisterFormData) => {
   try {
     const result = await registerUser(data);
 
-    console.log(result);
+    // console.log(result);
 
     toast.success("Registration successful!", {
       description: "Redirecting to the login page...",

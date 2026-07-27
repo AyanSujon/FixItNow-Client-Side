@@ -16,7 +16,7 @@ const accessToken = request.cookies.get("accessToken")?.value;
 
 const decodedToken = accessToken ? jwt.decode(accessToken) as JwtPayload : null; 
 
-console.log(decodedToken, " proxy")
+// console.log(decodedToken, " proxy
 
 let userRole = null;
 

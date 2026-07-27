@@ -7,7 +7,7 @@ import { redirect } from "next/navigation";
 
 
 export async function loginUser(data: LoginFormData) {
-  console.log("Login Request:", data);
+  // console.log("Login Request:", data);
 
 //  Call backend API
   const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/login`, {
