@@ -24,6 +24,7 @@ import {
   User,
   Settings,
   LogOut,
+  Home,
 } from "lucide-react";
 
 import { logout } from "@/services/logout";
@@ -87,6 +88,12 @@ export default function UserDropdown({ user }: Props) {
 
         <DropdownMenuSeparator />
 
+        <DropdownMenuItem asChild>
+          <Link href="/">
+            <Home className="mr-2 h-4 w-4" />
+            Home
+          </Link>
+        </DropdownMenuItem>
         <DropdownMenuItem asChild>
           <Link href="/profile">
             <User className="mr-2 h-4 w-4" />

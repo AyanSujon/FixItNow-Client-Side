@@ -4,7 +4,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LogOut, Settings } from "lucide-react";
+import { CircleHelp, LogOut, Settings, TriangleAlert } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -13,6 +13,7 @@ import { cn } from "@/lib/utils";
 import { navigation } from "../_config/dashboard-navigation";
 import SiteLogo from "@/components/common/SiteLogo";
 import { logout } from "@/services/logout";
+import { toast } from "sonner";
 
 
 interface SidebarContentProps {
@@ -28,15 +29,21 @@ export default function SidebarContent({
 
   const navItems = navigation[role];
 
-  const handleLogout = async() => {
-    await logout();
+  const handleLogout = async () => {
+    try {
+      await logout();
+      toast.error("Logout successfull.");
+    } catch (error) {
+      console.error("Logout failed:", error);
+      toast.error("Failed to logout");
+    }
   };
 
   return (
     <div className="flex h-full flex-col w-full">
       {/* Logo */}
       <div className="flex items-center gap-3 border-b px-4 py-4">
-        <SiteLogo/>
+        <SiteLogo />
       </div>
 
       <ScrollArea className="flex-1 px-3 py-6">
@@ -72,6 +79,23 @@ export default function SidebarContent({
         >
           <Settings className="h-5 w-5" />
           Settings
+        </Link>
+        <Link
+          href="/dashboard/help-support"
+          onClick={onClose}
+          className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+        >
+          <CircleHelp className="h-5 w-5" />
+          Help / Support
+        </Link>
+
+        <Link
+          href="/dashboard/reports"
+          onClick={onClose}
+          className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+        >
+          <TriangleAlert className="h-5 w-5" />
+          Reports
         </Link>
       </ScrollArea>
 
