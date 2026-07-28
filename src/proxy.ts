@@ -27,7 +27,7 @@ if(!decodedAccessToken?.success && decodedRefreshToken?.success){
   // access token has expired but refresh token is valid. get new access token from backend
   const result = await GetNewAccessToken();
 
-  console.log(result)
+  // console.log(result)
 
   if(result.success){
     const newAccessToken = result.data?.accessToken;
