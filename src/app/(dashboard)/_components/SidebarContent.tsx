@@ -4,13 +4,15 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LogOut, Settings, Wrench } from "lucide-react";
+import { LogOut, Settings } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import { navigation } from "../_config/dashboard-navigation";
+import SiteLogo from "@/components/common/SiteLogo";
+import { logout } from "@/services/logout";
 
 
 interface SidebarContentProps {
@@ -26,24 +28,15 @@ export default function SidebarContent({
 
   const navItems = navigation[role];
 
-  const handleLogout = () => {
-    console.log("logout");
+  const handleLogout = async() => {
+    await logout();
   };
 
   return (
-    <div className="flex h-full flex-col">
+    <div className="flex h-full flex-col w-full">
       {/* Logo */}
-      <div className="flex items-center gap-3 border-b px-6 py-8">
-        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-primary-foreground">
-          <Wrench className="h-6 w-6" />
-        </div>
-
-        <div>
-          <h1 className="text-2xl font-bold">FixItNow</h1>
-          <p className="text-xs text-muted-foreground">
-            Home Services
-          </p>
-        </div>
+      <div className="flex items-center gap-3 border-b px-4 py-4">
+        <SiteLogo/>
       </div>
 
       <ScrollArea className="flex-1 px-3 py-6">

@@ -5,7 +5,7 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { Menu, User, Settings, LogOut, Home, Search, Users, PlayCircle } from 'lucide-react';
+import { Menu, User, Settings, LogOut, Home, Search, Users, PlayCircle, LayoutDashboard } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -26,6 +26,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import ThemeSwitcher from './ThemeSwitcher';
 import { logout } from '@/services/logout';
 import { toast } from 'sonner';
+import SiteLogo from './SiteLogo';
 
 // Navigation items
 const navItems = [
@@ -102,12 +103,13 @@ const isLoggedIn = !!user?.success && !!profile;
       <div className="mx-auto max-w-7xl px-6">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2">
+          <SiteLogo/>
+          {/* <Link href="/" className="flex items-center gap-2">
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
               <span className="text-lg font-bold text-primary-foreground">F</span>
             </div>
             <span className="font-semibold text-xl tracking-tight">FixItNow</span>
-          </Link>
+          </Link> */}
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-8">
@@ -156,6 +158,12 @@ const isLoggedIn = !!user?.success && !!profile;
                     </div>
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <Link href="/dashboard" className="cursor-pointer">
+                      <LayoutDashboard className="mr-2 h-4 w-4" />
+                      Dashboard
+                    </Link>
+                  </DropdownMenuItem>
                   <DropdownMenuItem asChild>
                     <Link href="/profile" className="cursor-pointer">
                       <User className="mr-2 h-4 w-4" />
