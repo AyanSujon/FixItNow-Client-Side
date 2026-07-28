@@ -1,4 +1,5 @@
 import { getMe } from "@/services/getMe";
+import Hero from "./_components/Hero";
 
 export default  async function Home() {
 
@@ -7,6 +8,7 @@ export default  async function Home() {
 
   return (
 <div>
+  <Hero/>
   <h1>main page</h1>
 </div>
   );
