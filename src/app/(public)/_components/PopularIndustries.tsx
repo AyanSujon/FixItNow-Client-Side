@@ -26,7 +26,7 @@ export default function PopularIndustries() {
   return (
 <>
       {/* Popular Industries */}
-      <div className="z-10 w-full mt-auto pb-12 pt-16 lg:pt-20">
+      <div className="z-10 w-full mt-auto pb-12 pt-8 lg:pt-16">
         <div className="container max-w-7xl mx-auto px-6 lg:px-8">
           <p className="uppercase text-xs tracking-[2px] text-muted-foreground mb-6 font-medium text-center lg:text-left">
             POPULAR INDUSTRIES
