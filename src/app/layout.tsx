@@ -78,7 +78,6 @@ import "./globals.css";
 import { cn } from "@/lib/utils";
 import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "next-themes";
-import Footer from "@/components/common/Footer";
 
 
 const inter = Inter({ 
@@ -133,7 +132,7 @@ export default async function RootLayout({
             expand
           />
         </ThemeProvider>
-        <Footer/>
+        
       </body>
     </html>
   );

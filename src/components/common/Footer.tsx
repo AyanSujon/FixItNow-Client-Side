@@ -1,4 +1,4 @@
-"use client";
+
 
 import Link from "next/link";
 import {
@@ -19,6 +19,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 export default function Footer() {
+    const currentYear = new Date().getFullYear();
   return (
     <footer className="relative overflow-hidden border-t bg-background">
       {/* Background */}
@@ -179,7 +180,7 @@ export default function Footer() {
 
         <div className="mt-16 flex flex-col items-center justify-between gap-4 border-t pt-8 text-sm text-muted-foreground md:flex-row">
           <p>
-            © {new Date().getFullYear()} FixItNow. All rights reserved.
+            © {currentYear} FixItNow. All rights reserved.
           </p>
 
           <div className="flex gap-6">
