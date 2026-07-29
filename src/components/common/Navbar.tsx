@@ -5,7 +5,7 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { Menu, User, Settings, LogOut, Home, Search, Users, PlayCircle, LayoutDashboard } from 'lucide-react';
+import { Menu, User, Settings, LogOut, Home, Search, Users, PlayCircle, LayoutDashboard, Contact } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -31,9 +31,10 @@ import SiteLogo from './SiteLogo';
 // Navigation items
 const navItems = [
   { href: '/', label: 'Home', icon: Home },
-  { href: '/browse-services', label: 'Browse Services', icon: Search },
+  { href: '/services', label: 'Services', icon: Search },
   { href: '/find-technicians', label: 'Find Technicians', icon: Users },
   { href: '/how-it-works', label: 'How It Works', icon: PlayCircle },
+  { href: '/contact', label: 'Contact', icon: Contact},
 ];
 
 type IUser = {
